@@ -1,0 +1,16 @@
+CHANGELOG.md
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+scripts/__init__.py
+scripts/package_telemetry_vector.py
+src/x_make_telemetry_vector_x/__init__.py
+src/x_make_telemetry_vector_x/py.typed
+src/x_make_telemetry_vector_x.egg-info/PKG-INFO
+src/x_make_telemetry_vector_x.egg-info/SOURCES.txt
+src/x_make_telemetry_vector_x.egg-info/dependency_links.txt
+src/x_make_telemetry_vector_x.egg-info/requires.txt
+src/x_make_telemetry_vector_x.egg-info/top_level.txt
+tests/__init__.py
+tests/test_telemetry_vector.py

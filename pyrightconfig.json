@@ -1,0 +1,12 @@
+{
+    "include": ["."],
+    "stubPath": "../typings",
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": [
+                "./src"
+            ]
+        }
+    ]
+}
