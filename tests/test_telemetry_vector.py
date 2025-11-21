@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import pytest
+
 from x_make_telemetry_vector_x import (
     DEFAULT_TELEMETRY_VERSION,
     TelemetryEvent,
