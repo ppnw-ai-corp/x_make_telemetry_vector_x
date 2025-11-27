@@ -8,12 +8,13 @@ re-writing the same coercion logic.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from datetime import UTC, datetime
-from typing import Any, cast
+from datetime import UTC, datetime, timezone
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 DEFAULT_TELEMETRY_VERSION = "0.1.0"
+UTC = UTC
 
 
 class TelemetryEvent(BaseModel):
@@ -94,7 +95,7 @@ def normalize_payload(
         raise TypeError(msg)
 
     try:
-        model = cast("TelemetryEvent", TelemetryEvent.model_validate(event))
+        model: TelemetryEvent = TelemetryEvent.model_validate(event)
     except ValidationError as exc:  # pragma: no cover - provide stable error type
         raise ValueError(str(exc)) from exc
 
