@@ -8,13 +8,13 @@ re-writing the same coercion logic.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 DEFAULT_TELEMETRY_VERSION = "0.1.0"
-UTC = UTC
+UTC = timezone.utc  # noqa: UP017 - Python 3.10 compatibility
 
 
 class TelemetryEvent(BaseModel):

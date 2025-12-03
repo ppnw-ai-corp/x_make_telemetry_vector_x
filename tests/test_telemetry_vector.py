@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 import pytest
 
@@ -47,7 +47,15 @@ def test_normalize_payload_coerces_epoch_timestamp() -> None:
 
 
 def test_normalize_payload_supports_naive_datetime() -> None:
-    naive_dt = datetime(2025, 11, 12, 8, 45, 0, tzinfo=UTC)
+    naive_dt = datetime(
+        2025,
+        11,
+        12,
+        8,
+        45,
+        0,
+        tzinfo=timezone.utc,  # noqa: UP017 - Python 3.10 compatibility
+    )
     event = {
         "id": "naive",
         "source": "lab",

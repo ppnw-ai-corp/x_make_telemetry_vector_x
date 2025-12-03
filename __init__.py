@@ -1,8 +1,9 @@
-"""Workspace shim that exposes the telemetry toolkit when the repo root is on sys.path.
+"""Expose telemetry toolkit objects without installing the package.
 
-The actual implementation lives inside :mod:`x_make_telemetry_vector_x.src.x_make_telemetry_vector_x`.
-This shim simply re-exports the public surface so local tooling (mypy/pyright/tests)
-can resolve the canonical objects without installing the package.
+This shim exists so tooling can import the canonical telemetry helpers when the repo
+root is directly on ``sys.path``. The real implementation lives in
+``x_make_telemetry_vector_x.src.x_make_telemetry_vector_x`` and this module simply
+re-exports its public surface so mypy/pyright/tests can resolve them.
 """
 
 from __future__ import annotations
