@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 from .scripts import package_telemetry_vector
 
@@ -13,7 +16,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     extra_args = list(argv) if argv is not None else []
     if extra_args:
         unknown = " ".join(extra_args)
-        raise SystemExit(f"unexpected arguments: {unknown}")
+        message = f"unexpected arguments: {unknown}"
+        raise SystemExit(message)
 
     package_telemetry_vector.main()
     return 0

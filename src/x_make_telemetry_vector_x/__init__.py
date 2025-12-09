@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from datetime import datetime, timezone
-from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
@@ -26,8 +25,8 @@ class TelemetryEvent(BaseModel):
     source: str
     action: str
     timestamp: datetime
-    payload: dict[str, Any] = Field(default_factory=dict)
-    metadata: dict[str, Any] = Field(default_factory=dict)
+    payload: dict[str, object] = Field(default_factory=dict)
+    metadata: dict[str, object] = Field(default_factory=dict)
 
     @field_validator("timestamp", mode="before")
     @classmethod
@@ -70,11 +69,11 @@ def _ensure_utc(dt: datetime) -> datetime:
 
 
 def normalize_payload(
-    event: Mapping[str, Any],
+    event: Mapping[str, object],
     *,
     telemetry_version: str | None = None,
     ingested_at: datetime | None = None,
-) -> dict[str, Any]:
+) -> dict[str, object]:
     """Normalise a raw telemetry payload into the canonical envelope.
 
     Parameters
