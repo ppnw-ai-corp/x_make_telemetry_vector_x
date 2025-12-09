@@ -7,13 +7,36 @@ re-writing the same coercion logic.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
+from typing import Literal, ParamSpec, TypedDict, TypeVar, cast
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+from typing_extensions import Unpack
 
 DEFAULT_TELEMETRY_VERSION = "0.1.0"
 UTC = timezone.utc  # noqa: UP017 - Python 3.10 compatibility
+
+P = ParamSpec("P")
+R = TypeVar("R")
+
+
+class FieldValidatorOptions(TypedDict, total=False):
+    mode: Literal["before", "after", "plain"]
+
+
+def typed_field_validator(
+    *fields: str,
+    **options: Unpack[FieldValidatorOptions],
+) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    return cast(
+        "Callable[[Callable[P, R]], Callable[P, R]]",
+        field_validator(*fields, **options),
+    )
+
+
+def _object_dict() -> dict[str, object]:
+    return {}
 
 
 class TelemetryEvent(BaseModel):
@@ -25,10 +48,10 @@ class TelemetryEvent(BaseModel):
     source: str
     action: str
     timestamp: datetime
-    payload: dict[str, object] = Field(default_factory=dict)
-    metadata: dict[str, object] = Field(default_factory=dict)
+    payload: dict[str, object] = Field(default_factory=_object_dict)
+    metadata: dict[str, object] = Field(default_factory=_object_dict)
 
-    @field_validator("timestamp", mode="before")
+    @typed_field_validator("timestamp", mode="before")
     @classmethod
     def _coerce_timestamp(cls, value: object) -> datetime:
         """Accept string, epoch seconds, or datetime and return UTC-aware timestamp."""
@@ -45,7 +68,7 @@ class TelemetryEvent(BaseModel):
         msg = f"Unsupported timestamp value: {value!r}"
         raise ValueError(msg)
 
-    @field_validator("event_id")
+    @typed_field_validator("event_id")
     @classmethod
     def _strip_event_id(cls, value: str) -> str:
         clean = value.strip()
@@ -54,7 +77,7 @@ class TelemetryEvent(BaseModel):
             raise ValueError(msg)
         return clean
 
-    @field_validator("source", "action")
+    @typed_field_validator("source", "action")
     @classmethod
     def _strip_required_fields(cls, value: str) -> str:
         clean = value.strip()
@@ -69,7 +92,7 @@ def _ensure_utc(dt: datetime) -> datetime:
 
 
 def normalize_payload(
-    event: Mapping[str, object],
+    event: Mapping[str, object] | object,
     *,
     telemetry_version: str | None = None,
     ingested_at: datetime | None = None,
